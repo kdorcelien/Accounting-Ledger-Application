@@ -1,25 +1,27 @@
 package com.pluralsight;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class Application {
+public class Transaction {
     private LocalDate date;
     private LocalTime time;
     private String description;
     private String vendor;
     private double amount;
+    private double accountNumber, routingNumber, depositAmount;
+    private String accountHolderName, typeOfAccount;
 
-
-    public Application(String description, String vendor, double amount) {
+    public Transaction(String description, String vendor, double amount) {
         this.date = LocalDate.now();
         this.time = LocalTime.now();
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
     }
-
     public LocalDate getDate() {
         return date;
     }
@@ -63,5 +65,22 @@ public class Application {
                 "Description: " + description + "\n" +
                 "Vendor: " + vendor + "\n" +
                 "Amount: $" + String.format("%.2f", amount);
+    }
+
+    public void saveToFile(String fileName) {
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+        try (FileWriter writer = new FileWriter("transactions.csv", true)) {
+            writer.write("Date: " + date.format(dateFormat) + "\n");
+            writer.write("Time: " + time.format(timeFormat) + "\n");
+            writer.write("Description: " + description + "\n");
+            writer.write("Vendor: " + vendor + "\n");
+            writer.write(String.format("Amount: $%.2f%n", amount));
+            writer.write("-----------------------------\n");
+            System.out.println("Record saved to: " + fileName);
+        } catch (IOException e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
     }
 }

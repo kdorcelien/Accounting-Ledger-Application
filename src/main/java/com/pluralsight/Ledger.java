@@ -1,12 +1,15 @@
 package com.pluralsight;
 
-import java.util.ArrayList;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Ledger {
     public static void main(String[] args) {
         System.out.println("== Welcome to your Ledger Application ==");
         run();
+
     }
     public static void run() {
         while (true) {
@@ -34,14 +37,14 @@ public class Ledger {
         switch (option) {
             case 1:
                 System.out.println();
-                //addDeposit();
+                addDeposit();
                 break;
             case 2:
                 System.out.print("Debit only");
-                //makePayment();
+                makePayment();
                 break;
             case 3:
-                //ledgerScreen();
+                ledgerScreen();
                 break;
             case 4:
                 scanner.close();
@@ -55,8 +58,77 @@ public class Ledger {
         scanner.nextLine();
 
     }
-   //
+   public static void addDeposit() {
+        try {
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Enter description: ");
+            String description = scanner.nextLine();
 
+            System.out.print("Enter vendor: ");
+            String vendor = scanner.nextLine();
 
+            System.out.print("Enter amount: ");
+            double amount = scanner.nextDouble();
+            scanner.nextLine();
 
+            Transaction deposit = new Transaction(description, vendor, amount);
+            BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
+                writer.write(deposit.toString());
+
+        } catch (IOException e) {
+            System.out.println(e.fillInStackTrace());
+        }
+
+   }
+public static void makePayment(){
+    try {
+    Scanner scanner = new Scanner(System.in);
+
+    System.out.print("Enter description: ");
+    String description = scanner.nextLine();
+
+    System.out.print("Enter vendor: ");
+    String vendor = scanner.nextLine();
+
+    System.out.print("Enter amount: ");
+    double amount = scanner.nextDouble();
+    scanner.nextLine();
+
+    Transaction payment = new Transaction(description, vendor, -amount);
+    BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
+    writer.write(payment.toString());
+
+    } catch (IOException e) {
+        System.out.println(e.fillInStackTrace());
+    }
+}
+public static void ledgerScreen(){
+        try{
+
+        }catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+}
+    public static void saveTransaction(Transaction record) {
+        try {
+            BufferedWriter writer = new BufferedWriter(
+                    new FileWriter("transactions.csv", true));
+
+            // Format: date|time|description|vendor|amount
+            String line = String.format("%s|%s|%s|%s|%.2f\n",
+                    record.getDate(),
+                    record.getTime(),
+                    record.getDescription(),
+                    record.getVendor(),
+                    record.getAmount());
+
+            writer.write(line);
+            writer.close();
+
+            System.out.println("Transaction saved!");
+
+        } catch (IOException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
