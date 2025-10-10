@@ -7,8 +7,8 @@ public class Ledger {
     }
     public static void run() {
         while (true) {
-            menu();
-            menuSelector();
+          //  menu();
+          //  menuSelector();
         }
     }
 }
