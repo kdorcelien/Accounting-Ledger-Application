@@ -12,8 +12,6 @@ public class Transaction {
     private String description;
     private String vendor;
     private double amount;
-    private double accountNumber, routingNumber, depositAmount;
-    private String accountHolderName, typeOfAccount;
 
     public Transaction(String description, String vendor, double amount) {
         this.date = LocalDate.now();

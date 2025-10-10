@@ -26,8 +26,6 @@ public class Ledger {
 
     }
     public static void menuSelector() {
-        // ArrayList<Product> inventory = getInventory();
-
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Enter a number: ");
@@ -102,14 +100,45 @@ public static void makePayment(){
         System.out.println(e.fillInStackTrace());
     }
 }
-public static void ledgerScreen(){
-        try{
+public static void ledgerScreen() {
+    Scanner scanner = new Scanner(System.in);
+    boolean keepRunning = true;
 
-        }catch (IOException e) {
-            System.out.println(e.getMessage());
+    while (keepRunning) {
+        System.out.println("=== LEDGER Screen ===");
+        System.out.println(" 1- All - Show all entries");
+        System.out.println(" 2- Deposits - Show only deposits");
+        System.out.println(" 3- Payments - Show only payments");
+        System.out.println(" 4- Reports - Run reports");
+        System.out.println(" 5- Home - Go back to home");
+        System.out.print("Enter your choice: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
+
+        switch (choice) {
+            case 1:
+                //displayAll();
+                break;
+            case 2:
+                //displayDeposits();
+                break;
+            case 3:
+                // displayPayments();
+                break;
+            case 4:
+                System.out.println("Reports Screen: ");
+                // reportsScreen();
+
+                break;
+            case 5:
+                keepRunning = false;
+                break;
+            default:
+                System.out.println("Invalid choice.");
         }
+    }
 }
-    public static void saveTransaction(Transaction record) {
+    public static void saveTransaction (Transaction record){
         try {
             BufferedWriter writer = new BufferedWriter(
                     new FileWriter("transactions.csv", true));
