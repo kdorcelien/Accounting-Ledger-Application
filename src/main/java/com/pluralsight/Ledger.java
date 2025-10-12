@@ -220,21 +220,21 @@ public static void ledgerScreen() {
                     monthToDate();
                     break;
                 case 2:
-                    System.out.println("=== Search Previous month ===");
-                    //previousMonth();
+                    System.out.println("=== Search Previous months ===");
+                    previousMonth();
                     break;
                 case 3:
                     System.out.println("=== Search Current year ===");
                     yearToDate();
                     break;
                 case 4:
-                    System.out.println(" === Search Previous year === ");
-                    //previousYear();
+                    System.out.println(" === Search Previous years === ");
+                    previousYear();
                     break;
                 case 5:
                     System.out.println(" === Search by Vendor === ");
                     System.out.println("Enter vendor to search: ");
-                    //();
+                    SearchByVendor();
                     break;
                 case 0:
                     System.out.println("=== LEDGER Screen ===");
@@ -305,18 +305,15 @@ public static void ledgerScreen() {
 
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
-        int currentMonth = today.getMonthValue();
 
 
-        System.out.println("Showing transactions for: " + today.getMonth() + " | " + currentYear);
-        System.out.println();
+        System.out.println("Showing transactions for: " + currentYear + "\n");
 
         for (Transaction t : allTransactions) {
             LocalDate transactionDate = t.getDate();
-            int transactionMonth = transactionDate.getMonthValue();
             int transactionYear = transactionDate.getYear();
 
-            if (transactionMonth == currentMonth && transactionYear == currentYear) {
+            if (transactionYear == currentYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
                         t.getTime(),
@@ -326,6 +323,34 @@ public static void ledgerScreen() {
             }
         }
     }
+    public static void previousYear() {
+        ArrayList<Transaction> allTransactions = loadTransactions();
+
+        LocalDate input = LocalDate.now();
+        int currentYear = input.getYear();
+        int previousYear = currentYear -1;
+
+        System.out.println("Showing transactions for: " + previousYear + "\n");
+
+        for (Transaction t : allTransactions) {
+            LocalDate transactionDate = t.getDate();
+            int transactionYear = transactionDate.getYear();
+
+            if (transactionYear == previousYear) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+    }
+
+    public static void SearchByVendor() {
+
+    }
+
 public static ArrayList<Transaction> loadTransactions() {
         ArrayList<Transaction> transactions = new ArrayList<>();
 
