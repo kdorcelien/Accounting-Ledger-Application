@@ -1,8 +1,7 @@
 package com.pluralsight;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Ledger {
@@ -34,14 +33,15 @@ public class Ledger {
 
         switch (option) {
             case 1:
-                System.out.println();
+                System.out.println("=== Enter your desired deposit $$$ ===");
                 addDeposit();
                 break;
             case 2:
-                System.out.print("Debit only");
+                System.out.print("=== Debit only ===");
                 makePayment();
                 break;
             case 3:
+                System.out.println("=== LEDGER Screen ===");
                 ledgerScreen();
                 break;
             case 4:
@@ -105,7 +105,6 @@ public static void ledgerScreen() {
     boolean keepRunning = true;
 
     while (keepRunning) {
-        System.out.println("=== LEDGER Screen ===");
         System.out.println(" 1- All - Show all entries");
         System.out.println(" 2- Deposits - Show only deposits");
         System.out.println(" 3- Payments - Show only payments");
@@ -117,16 +116,19 @@ public static void ledgerScreen() {
 
         switch (choice) {
             case 1:
-                //displayAll();
+                System.out.println("=== ALL TRANSACTIONS ===");
+                displayAll();
                 break;
             case 2:
-                //displayDeposits();
+                System.out.println("=== DEPOSITS ONLY ===");
+                displayDeposits();
                 break;
             case 3:
-                // displayPayments();
+                System.out.println("=== PAYMENTS ONLY ===");
+                displayPayments();
                 break;
             case 4:
-                System.out.println("Reports Screen: ");
+                System.out.println(" === Reports Screen === ");
                 // reportsScreen();
 
                 break;
@@ -138,21 +140,113 @@ public static void ledgerScreen() {
         }
     }
 }
+    public static void displayAll() {
+        ArrayList<Transaction> transactions = loadTransactions();
+
+        // Show newest first (**reverse order**)
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+            System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                    t.getDate(),
+                    t.getTime(),
+                    t.getDescription(),
+                    t.getVendor(),
+                    t.getAmount());
+        }
+    }
+    public static void displayDeposits() {
+        ArrayList<Transaction> transactions = loadTransactions();
+
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+
+            // Only show if amount is POSITIVE
+            if (t.getAmount() > 0) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+    }
+    public static void displayPayments() {
+        ArrayList<Transaction> transactions = loadTransactions();
+
+        for (int i = transactions.size() - 1; i >= 0; i--) {
+            Transaction t = transactions.get(i);
+
+            // Only show if amount is NEGATIVE
+            if (t.getAmount() < 0) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+        System.out.println("Thank you for your purchase.");
+    }
+    public static void reportsScreen() {
+        Scanner scanner = new Scanner(System.in);
+        boolean keepRunning = true;
+
+        while (keepRunning) {
+
+            System.out.print("Enter your choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+        }
+    }
+public static ArrayList<Transaction> loadTransactions() {
+        ArrayList<Transaction> transactions = new ArrayList<>();
+
+        try {
+            BufferedReader bufreader = new BufferedReader(
+                    new FileReader("transactions.csv"));
+
+            String input;
+            while ((input = bufreader.readLine()) != null) {
+                // parts[0] = date
+                // parts[1] = time
+                // parts[2] = description
+                // parts[3] = vendor
+                // parts[4] = amount
+                String[] parts = input.split("\\|");
+                String description = parts[2];
+                String vendor = parts[3];
+                double amount = Double.parseDouble(parts[4]);
+
+                Transaction t = new Transaction(description, vendor, amount);
+                transactions.add(t);
+            }
+
+            bufreader.close();
+
+        } catch (IOException e) {
+            System.out.println("Error reading file: " + e.getMessage());
+        }
+
+        return transactions;
+    }
+
     public static void saveTransaction (Transaction record){
         try {
-            BufferedWriter writer = new BufferedWriter(
+            BufferedWriter bufwriter = new BufferedWriter(
                     new FileWriter("transactions.csv", true));
 
             // Format: date|time|description|vendor|amount
-            String line = String.format("%s|%s|%s|%s|%.2f\n",
+            String input = String.format("%s|%s|%s|%s|%.2f\n",
                     record.getDate(),
                     record.getTime(),
                     record.getDescription(),
                     record.getVendor(),
                     record.getAmount());
 
-            writer.write(line);
-            writer.close();
+            bufwriter.write(input);
+            bufwriter.close();
 
             System.out.println("Transaction saved!");
 
