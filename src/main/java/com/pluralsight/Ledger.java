@@ -1,6 +1,8 @@
 package com.pluralsight;
 
 import java.io.*;
+import java.sql.SQLOutput;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,12 +12,14 @@ public class Ledger {
         run();
 
     }
+
     public static void run() {
         while (true) {
             menu();
           menuSelector();
         }
     }
+
     public static void menu() {
         System.out.println("What do you want to do?\n " +
                 "  1-  Add Deposit \n" +
@@ -24,6 +28,7 @@ public class Ledger {
                 "  4-  Quit the application\n");
 
     }
+
     public static void menuSelector() {
         Scanner scanner = new Scanner(System.in);
 
@@ -56,6 +61,7 @@ public class Ledger {
         scanner.nextLine();
 
     }
+
    public static void addDeposit() {
         try {
             Scanner scanner = new Scanner(System.in);
@@ -78,7 +84,8 @@ public class Ledger {
         }
 
    }
-public static void makePayment(){
+
+   public static void makePayment(){
     try {
     Scanner scanner = new Scanner(System.in);
 
@@ -100,6 +107,7 @@ public static void makePayment(){
         System.out.println(e.fillInStackTrace());
     }
 }
+
 public static void ledgerScreen() {
     Scanner scanner = new Scanner(System.in);
     boolean keepRunning = true;
@@ -129,8 +137,7 @@ public static void ledgerScreen() {
                 break;
             case 4:
                 System.out.println(" === Reports Screen === ");
-                // reportsScreen();
-
+                reportsScreen();
                 break;
             case 5:
                 keepRunning = false;
@@ -140,6 +147,7 @@ public static void ledgerScreen() {
         }
     }
 }
+
     public static void displayAll() {
         ArrayList<Transaction> transactions = loadTransactions();
 
@@ -154,6 +162,7 @@ public static void ledgerScreen() {
                     t.getAmount());
         }
     }
+
     public static void displayDeposits() {
         ArrayList<Transaction> transactions = loadTransactions();
 
@@ -171,6 +180,7 @@ public static void ledgerScreen() {
             }
         }
     }
+
     public static void displayPayments() {
         ArrayList<Transaction> transactions = loadTransactions();
 
@@ -189,15 +199,131 @@ public static void ledgerScreen() {
         }
         System.out.println("Thank you for your purchase.");
     }
+
     public static void reportsScreen() {
         Scanner scanner = new Scanner(System.in);
         boolean keepRunning = true;
 
         while (keepRunning) {
-
+            System.out.println(" 1- Month To Date");
+            System.out.println(" 2- Previous Month");
+            System.out.println(" 3- Year To Date");
+            System.out.println(" 4- Previous Year");
+            System.out.println(" 5- Search by Vendor");
+            System.out.println(" 0- Home - Go back to ledger screen");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    System.out.println("=== Search Current month ===");
+                    monthToDate();
+                    break;
+                case 2:
+                    System.out.println("=== Search Previous month ===");
+                    //previousMonth();
+                    break;
+                case 3:
+                    System.out.println("=== Search Current year ===");
+                    yearToDate();
+                    break;
+                case 4:
+                    System.out.println(" === Search Previous year === ");
+                    //previousYear();
+                    break;
+                case 5:
+                    System.out.println(" === Search by Vendor === ");
+                    System.out.println("Enter vendor to search: ");
+                    //();
+                    break;
+                case 0:
+                    System.out.println("=== LEDGER Screen ===");
+                    ledgerScreen();
+                    keepRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+    public static void monthToDate() {
+        ArrayList<Transaction> allTransactions = loadTransactions();
+
+        LocalDate today = LocalDate.now();
+        int currentMonth = today.getMonthValue();
+        int currentYear = today.getYear();
+
+        System.out.println("Showing transactions for: " + today.getMonth() + " | " + currentYear);
+        System.out.println();
+
+        for (Transaction t : allTransactions) {
+            LocalDate transactionDate = t.getDate();
+            int transactionMonth = transactionDate.getMonthValue();
+            int transactionYear = transactionDate.getYear();
+
+            if (transactionMonth == currentMonth && transactionYear == currentYear) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+    }
+    public static void previousMonth() {
+        ArrayList<Transaction> allTransactions = loadTransactions();
+
+        LocalDate input = LocalDate.now();
+        int currentMonth = input.getMonthValue();
+        int previousMonth = currentMonth -1;
+        int currentYear = input.getYear();
+        int previousYear = currentYear;
+
+        if(previousMonth == 0){
+            previousMonth = 12;
+            previousYear = currentYear - 1;
+        }
+        for (Transaction t : allTransactions) {
+            LocalDate transactionDate = t.getDate();
+            int transactionMonth = transactionDate.getMonthValue();
+            int transactionYear = transactionDate.getYear();
+
+            if (transactionMonth == previousMonth && transactionYear == currentYear) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+    }
+
+    public static void yearToDate() {
+        ArrayList<Transaction> allTransactions = loadTransactions();
+
+        LocalDate today = LocalDate.now();
+        int currentYear = today.getYear();
+        int currentMonth = today.getMonthValue();
+
+
+        System.out.println("Showing transactions for: " + today.getMonth() + " | " + currentYear);
+        System.out.println();
+
+        for (Transaction t : allTransactions) {
+            LocalDate transactionDate = t.getDate();
+            int transactionMonth = transactionDate.getMonthValue();
+            int transactionYear = transactionDate.getYear();
+
+            if (transactionMonth == currentMonth && transactionYear == currentYear) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
         }
     }
 public static ArrayList<Transaction> loadTransactions() {
