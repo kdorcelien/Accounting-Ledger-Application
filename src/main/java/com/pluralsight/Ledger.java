@@ -1,7 +1,6 @@
 package com.pluralsight;
 
 import java.io.*;
-import java.sql.SQLOutput;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -63,7 +62,6 @@ public class Ledger {
     }
 
    public static void addDeposit() {
-        try {
             Scanner scanner = new Scanner(System.in);
             System.out.print("Enter description: ");
             String description = scanner.nextLine();
@@ -76,17 +74,10 @@ public class Ledger {
             scanner.nextLine();
 
             Transaction deposit = new Transaction(description, vendor, amount);
-            BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
-                writer.write(deposit.toString());
-
-        } catch (IOException e) {
-            System.out.println(e.fillInStackTrace());
-        }
-
+            saveTransaction(deposit);
    }
 
    public static void makePayment(){
-    try {
     Scanner scanner = new Scanner(System.in);
 
     System.out.print("Enter description: ");
@@ -100,12 +91,7 @@ public class Ledger {
     scanner.nextLine();
 
     Transaction payment = new Transaction(description, vendor, -amount);
-    BufferedWriter writer = new BufferedWriter(new FileWriter("transactions.csv", true));
-    writer.write(payment.toString());
-
-    } catch (IOException e) {
-        System.out.println(e.fillInStackTrace());
-    }
+        saveTransaction(payment);
 }
 
 public static void ledgerScreen() {
@@ -348,7 +334,22 @@ public static void ledgerScreen() {
     }
 
     public static void SearchByVendor() {
+        ArrayList<Transaction> allTransactions = loadTransactions();  // ← ArrayList!
+        Scanner scanner = new Scanner(System.in);
+        String vendor = scanner.nextLine();
 
+        for (Transaction t : allTransactions) {
+            String transactionVendor = t.getVendor();
+
+            if (transactionVendor.trim().equalsIgnoreCase(vendor)) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
     }
 
 public static ArrayList<Transaction> loadTransactions() {
