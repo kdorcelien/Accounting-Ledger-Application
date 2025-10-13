@@ -56,28 +56,10 @@ public class Transaction {
     public String toString() {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-        System.out.println("date|time|description|vendor|amount \n");
         return date.format(dateFormat) + "|" +
                 time.format(timeFormat) + "|" +
                 description + "|" +
                 vendor + "|" +
                 String.format("%.2f", amount) + "\n";
-    }
-
-    public void saveToFile(String fileName) {
-        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-        try (FileWriter writer = new FileWriter("transactions.csv", true)) {
-            writer.write("Date: " + date.format(dateFormat) + "\n");
-            writer.write("Time: " + time.format(timeFormat) + "\n");
-            writer.write("Description: " + description + "\n");
-            writer.write("Vendor: " + vendor + "\n");
-            writer.write(String.format("Amount: $%.2f%n", amount));
-            writer.write("-----------------------------\n");
-            System.out.println("Record saved to: " + fileName);
-        } catch (IOException e) {
-            System.out.println("Error saving file: " + e.getMessage());
-        }
     }
 }

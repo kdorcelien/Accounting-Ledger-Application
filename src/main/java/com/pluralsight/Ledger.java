@@ -272,7 +272,7 @@ public static void ledgerScreen() {
             int transactionMonth = t.getDate().getMonthValue();
             int transactionYear = t.getDate().getYear();
 
-            if (transactionMonth == previousMonth && transactionYear == currentYear) {
+            if (transactionMonth == previousMonth && transactionYear == previousYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
                         t.getTime(),
@@ -407,6 +407,7 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedReader bufreader = new BufferedReader(
                     new FileReader("src/main/resources/transactions.csv"));
+            System.out.println("date|time|description|vendor|amount \n");
             bufreader.readLine();
 
 
