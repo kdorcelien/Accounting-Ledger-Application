@@ -406,7 +406,7 @@ public static ArrayList<Transaction> loadTransactions() {
 
         try {
             BufferedReader bufreader = new BufferedReader(
-                    new FileReader("transactions.csv"));
+                    new FileReader("src/main/resources/transactions.csv"));
             bufreader.readLine();
 
 

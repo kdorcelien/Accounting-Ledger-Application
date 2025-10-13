@@ -56,13 +56,12 @@ public class Transaction {
     public String toString() {
         DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-        return "Application:\n" +
-                "Date| " + date.format(dateFormat) + "\n" +
-                "Time| " + time.format(timeFormat) + "\n" +
-                "Description| " + description + "\n" +
-                "Vendor| " + vendor + "\n" +
-                "Amount| $" + String.format("%.2f", amount) + "\n";
+        System.out.println("date|time|description|vendor|amount \n");
+        return date.format(dateFormat) + "|" +
+                time.format(timeFormat) + "|" +
+                description + "|" +
+                vendor + "|" +
+                String.format("%.2f", amount) + "\n";
     }
 
     public void saveToFile(String fileName) {
