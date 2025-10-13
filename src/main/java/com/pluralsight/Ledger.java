@@ -222,6 +222,10 @@ public static void ledgerScreen() {
                     System.out.println("Enter vendor to search: ");
                     SearchByVendor();
                     break;
+                case 6:
+                    System.out.println(" === Custom Search === ");
+                     customSearch();
+                    break;
                 case 0:
                     System.out.println("=== LEDGER Screen ===");
                     ledgerScreen();
@@ -234,18 +238,12 @@ public static void ledgerScreen() {
     }
     public static void monthToDate() {
         ArrayList<Transaction> allTransactions = loadTransactions();
-
-        LocalDate today = LocalDate.now();
-        int currentMonth = today.getMonthValue();
-        int currentYear = today.getYear();
-
-        System.out.println("Showing transactions for: " + today.getMonth() + " | " + currentYear);
-        System.out.println();
+        int currentMonth = LocalDate.now().getMonthValue();
+        int currentYear = LocalDate.now().getYear();
 
         for (Transaction t : allTransactions) {
-            LocalDate transactionDate = t.getDate();
-            int transactionMonth = transactionDate.getMonthValue();
-            int transactionYear = transactionDate.getYear();
+            int transactionMonth = t.getDate().getMonthValue();
+            int transactionYear = t.getDate().getYear();
 
             if (transactionMonth == currentMonth && transactionYear == currentYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
@@ -271,9 +269,8 @@ public static void ledgerScreen() {
             previousYear = currentYear - 1;
         }
         for (Transaction t : allTransactions) {
-            LocalDate transactionDate = t.getDate();
-            int transactionMonth = transactionDate.getMonthValue();
-            int transactionYear = transactionDate.getYear();
+            int transactionMonth = t.getDate().getMonthValue();
+            int transactionYear = t.getDate().getYear();
 
             if (transactionMonth == previousMonth && transactionYear == currentYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
@@ -288,18 +285,11 @@ public static void ledgerScreen() {
 
     public static void yearToDate() {
         ArrayList<Transaction> allTransactions = loadTransactions();
-
-        LocalDate today = LocalDate.now();
-        int currentYear = today.getYear();
-
-
-        System.out.println("Showing transactions for: " + currentYear + "\n");
+        int currentYear = LocalDate.now().getYear();
 
         for (Transaction t : allTransactions) {
-            LocalDate transactionDate = t.getDate();
-            int transactionYear = transactionDate.getYear();
 
-            if (transactionYear == currentYear) {
+            if (t.getDate().getYear() == currentYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
                         t.getTime(),
@@ -312,17 +302,10 @@ public static void ledgerScreen() {
     public static void previousYear() {
         ArrayList<Transaction> allTransactions = loadTransactions();
 
-        LocalDate input = LocalDate.now();
-        int currentYear = input.getYear();
-        int previousYear = currentYear -1;
-
-        System.out.println("Showing transactions for: " + previousYear + "\n");
+        int previousYear = LocalDate.now().getYear() - 1;
 
         for (Transaction t : allTransactions) {
-            LocalDate transactionDate = t.getDate();
-            int transactionYear = transactionDate.getYear();
-
-            if (transactionYear == previousYear) {
+            if (t.getDate().getYear() == previousYear) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
                         t.getTime(),
@@ -334,14 +317,80 @@ public static void ledgerScreen() {
     }
 
     public static void SearchByVendor() {
-        ArrayList<Transaction> allTransactions = loadTransactions();  // ← ArrayList!
+        ArrayList<Transaction> allTransactions = loadTransactions();
         Scanner scanner = new Scanner(System.in);
         String vendor = scanner.nextLine();
 
         for (Transaction t : allTransactions) {
-            String transactionVendor = t.getVendor();
 
-            if (transactionVendor.trim().equalsIgnoreCase(vendor)) {
+            if (t.getVendor().trim().equalsIgnoreCase(vendor)) {
+                System.out.printf("%s | %s | %s | %s | $%.2f\n",
+                        t.getDate(),
+                        t.getTime(),
+                        t.getDescription(),
+                        t.getVendor(),
+                        t.getAmount());
+            }
+        }
+    }
+    public static void customSearch() {
+        ArrayList<Transaction> allTransactions = loadTransactions();
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter Start Date (MM-dd-yyyy) or press ENTER to skip: ");
+        String startDate = scanner.nextLine();
+        LocalDate parseStartDate = null;
+        if (!startDate.isEmpty()) {
+            parseStartDate = LocalDate.parse(startDate);
+        }
+
+        System.out.print("Enter End Date (MM-dd-yyyy) or press ENTER to skip: ");
+        String endDate = scanner.nextLine();
+        LocalDate parseEndDate = null;
+        if (!endDate.isEmpty()) {
+            parseEndDate = LocalDate.parse(endDate);
+        }
+
+        System.out.print("Enter Description or press ENTER to skip: ");
+        String description = scanner.nextLine();
+
+        System.out.print("Enter Vendor or press ENTER to skip: ");
+        String vendor = scanner.nextLine();
+
+        System.out.print("Enter Amount or press ENTER to skip: ");
+        String amount = scanner.nextLine();
+        Double parseAmount = null;
+        if (!amount.isEmpty()) {
+            parseAmount = Double.parseDouble(amount);
+        }
+
+        for (Transaction t : allTransactions){
+            boolean matches = true;
+            if (parseStartDate != null) {
+                if (t.getDate().isBefore(parseStartDate)) {
+                    matches = false;
+                }
+            }
+            if (parseEndDate != null) {
+                if (t.getDate().isAfter(parseEndDate)) {
+                    matches = false;
+                }
+            }
+            if (!description.isEmpty()) {
+                if (!t.getDescription().equalsIgnoreCase(description)) {
+                    matches = false;
+                }
+            }
+            if (!vendor.isEmpty()) {
+                if (!t.getVendor().equalsIgnoreCase(vendor)) {
+                    matches = false;
+                }
+            }
+            if (parseAmount != null) {
+                if (t.getAmount() != parseAmount) {
+                    matches = false;
+                }
+            }
+            if (matches){
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
                         t.getTime(),
@@ -389,15 +438,7 @@ public static ArrayList<Transaction> loadTransactions() {
             BufferedWriter bufwriter = new BufferedWriter(
                     new FileWriter("transactions.csv", true));
 
-            // Format: date|time|description|vendor|amount
-            String input = String.format("%s|%s|%s|%s|%.2f\n",
-                    record.getDate(),
-                    record.getTime(),
-                    record.getDescription(),
-                    record.getVendor(),
-                    record.getAmount());
-
-            bufwriter.write(input);
+            bufwriter.write(record.toString());
             bufwriter.close();
 
             System.out.println("Transaction saved!");
