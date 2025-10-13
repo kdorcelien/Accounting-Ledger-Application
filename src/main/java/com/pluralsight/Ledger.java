@@ -37,11 +37,11 @@ public class Ledger {
 
         switch (option) {
             case 1:
-                System.out.println("=== Enter your desired deposit $$$ ===");
+                System.out.println("=== Enter your desired deposit $$$ ===\n");
                 addDeposit();
                 break;
             case 2:
-                System.out.print("=== Debit only ===");
+                System.out.print("=== Debit only ===\n");
                 makePayment();
                 break;
             case 3:
@@ -110,19 +110,19 @@ public static void ledgerScreen() {
 
         switch (choice) {
             case 1:
-                System.out.println("=== ALL TRANSACTIONS ===");
+                System.out.println("=== ALL TRANSACTIONS ===\n");
                 displayAll();
                 break;
             case 2:
-                System.out.println("=== DEPOSITS ONLY ===");
+                System.out.println("=== DEPOSITS ONLY === \n");
                 displayDeposits();
                 break;
             case 3:
-                System.out.println("=== PAYMENTS ONLY ===");
+                System.out.println("=== PAYMENTS ONLY ===\n");
                 displayPayments();
                 break;
             case 4:
-                System.out.println(" === Reports Screen === ");
+                System.out.println(" === Reports Screen === \n");
                 reportsScreen();
                 break;
             case 5:
@@ -202,28 +202,28 @@ public static void ledgerScreen() {
             scanner.nextLine();
             switch (choice) {
                 case 1:
-                    System.out.println("=== Search Current month ===");
+                    System.out.println("=== Search Current month ===\n");
                     monthToDate();
                     break;
                 case 2:
-                    System.out.println("=== Search Previous months ===");
+                    System.out.println("=== Search Previous months ===\n");
                     previousMonth();
                     break;
                 case 3:
-                    System.out.println("=== Search Current year ===");
+                    System.out.println("=== Search Current year ===\n");
                     yearToDate();
                     break;
                 case 4:
-                    System.out.println(" === Search Previous years === ");
+                    System.out.println(" === Search Previous years === \n");
                     previousYear();
                     break;
                 case 5:
-                    System.out.println(" === Search by Vendor === ");
+                    System.out.println(" === Search by Vendor === \n");
                     System.out.println("Enter vendor to search: ");
                     SearchByVendor();
                     break;
                 case 6:
-                    System.out.println(" === Custom Search === ");
+                    System.out.println(" === Custom Search === \n");
                      customSearch();
                     break;
                 case 0:
@@ -407,6 +407,8 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedReader bufreader = new BufferedReader(
                     new FileReader("transactions.csv"));
+            bufreader.readLine();
+
 
             String input;
             while ((input = bufreader.readLine()) != null) {
@@ -436,7 +438,7 @@ public static ArrayList<Transaction> loadTransactions() {
     public static void saveTransaction (Transaction record){
         try {
             BufferedWriter bufwriter = new BufferedWriter(
-                    new FileWriter("transactions.csv", true));
+                    new FileWriter("src/main/resources/transactions.csv", true));
 
             bufwriter.write(record.toString());
             bufwriter.close();
