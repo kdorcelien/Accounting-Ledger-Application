@@ -72,9 +72,14 @@ public class Ledger {
 
         if (choice.equals("n")) {
             while (true) {
+                System.out.print("Enter date (MM-dd-yyyy) or press ENTER to skip: ");
+                String dateInput = scanner.nextLine().trim();
+
+                if (dateInput.isEmpty()) {
+                    date = LocalDate.now();
+                    break;
+                }
                 try {
-                    System.out.print("Enter date (MM-dd-yyyy): ");
-                    String dateInput = scanner.nextLine().trim();
                     date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
                     break;
                 } catch (Exception e) {
@@ -82,9 +87,14 @@ public class Ledger {
                 }
             }
             while (true) {
+                System.out.print("Enter time (HH:mm:ss) or press ENTER to skip: ");
+                String timeInput = scanner.nextLine().trim();
+
+                if (timeInput.isEmpty()) {
+                    time = LocalTime.now();
+                    break;
+                }
                 try {
-                    System.out.print("Enter time (HH:mm:ss): ");
-                    String timeInput = scanner.nextLine().trim();
                     time = LocalTime.parse(timeInput, DateTimeFormatter.ofPattern("HH:mm:ss"));
                     break;
                 } catch (Exception e) {
@@ -122,9 +132,14 @@ public class Ledger {
 
         if (choice.equals("n")) {
             while (true) {
+                System.out.print("Enter date (MM-dd-yyyy): ");
+                String dateInput = scanner.nextLine().trim();
+
+                if (dateInput.isEmpty()) {
+                    date = LocalDate.now();
+                    break;
+                }
                 try {
-                    System.out.print("Enter date (MM-dd-yyyy): ");
-                    String dateInput = scanner.nextLine().trim();
                     date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
                     break;
                 } catch (Exception e) {
@@ -133,9 +148,14 @@ public class Ledger {
             }
 
             while (true) {
+                System.out.print("Enter time (HH:mm:ss): ");
+                String timeInput = scanner.nextLine().trim();
+
+                if (timeInput.isEmpty()) {
+                    time = LocalTime.now();
+                    break;
+                }
                 try {
-                    System.out.print("Enter time (HH:mm:ss): ");
-                    String timeInput = scanner.nextLine().trim();
                     time = LocalTime.parse(timeInput, DateTimeFormatter.ofPattern("HH:mm:ss"));
                     break;
                 } catch (Exception e) {
@@ -158,7 +178,7 @@ public class Ledger {
         double amount = scanner.nextDouble();
         scanner.nextLine();
 
-        Transaction payment = new Transaction(date, time, description, vendor, -amount);
+        Transaction payment = new Transaction(date, time, description, vendor, amount);
         saveTransaction(payment);
     }
 
@@ -476,6 +496,7 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedReader bufreader = new BufferedReader(
                     new FileReader("src/main/resources/transactions.csv"));
+
             bufreader.readLine();
 
             String input;
@@ -503,7 +524,6 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedWriter bufwriter = new BufferedWriter(
                     new FileWriter("src/main/resources/transactions.csv", true));
-            bufwriter.write("date|time|description|vendor|amount \n");
             bufwriter.write(record.toString());
             bufwriter.close();
 
