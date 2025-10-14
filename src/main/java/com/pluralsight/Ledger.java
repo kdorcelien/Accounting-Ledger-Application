@@ -30,7 +30,6 @@ public class Ledger {
 
     public static void menuSelector() {
         Scanner scanner = new Scanner(System.in);
-
         System.out.print("Enter a number: ");
         int option = scanner.nextInt();
         scanner.nextLine();
