@@ -1,7 +1,4 @@
 package com.pluralsight;
-
-import java.io.FileWriter;
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -13,9 +10,9 @@ public class Transaction {
     private String vendor;
     private double amount;
 
-    public Transaction(String description, String vendor, double amount) {
-        this.date = LocalDate.now();
-        this.time = LocalTime.now();
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
+        this.date = date;
+        this.time = time;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;

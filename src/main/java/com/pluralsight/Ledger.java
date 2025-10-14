@@ -2,6 +2,8 @@ package com.pluralsight;
 
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -61,39 +63,106 @@ public class Ledger {
     }
 
    public static void addDeposit() {
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter description: ");
-            String description = scanner.nextLine();
+        Scanner scanner = new Scanner(System.in);
+        LocalDate date;
+        LocalTime time;
 
-            System.out.print("Enter vendor: ");
-            String vendor = scanner.nextLine();
+        System.out.print("Use current date and time? (Y/N): ");
+        String choice = scanner.nextLine().trim().toLowerCase();
 
-            System.out.print("Enter amount: ");
-            double amount = scanner.nextDouble();
-            scanner.nextLine();
+        if (choice.equals("n")) {
+            while (true) {
+                try {
+                    System.out.print("Enter date (MM-dd-yyyy): ");
+                    String dateInput = scanner.nextLine().trim();
+                    date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Invalid date format! Please use MM-dd-yyyy (e.g., 10-14-2025).");
+                }
+            }
+            while (true) {
+                try {
+                    System.out.print("Enter time (HH:mm:ss): ");
+                    String timeInput = scanner.nextLine().trim();
+                    time = LocalTime.parse(timeInput, DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Invalid time format! Please use HH:mm:ss (e.g., 14:30:00).");
+                }
+            }
 
-            Transaction deposit = new Transaction(description, vendor, amount);
-            saveTransaction(deposit);
-   }
+        } else {
+            date = LocalDate.now();
+            time = LocalTime.now();
+        }
 
-   public static void makePayment(){
-    Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter description: ");
+        String description = scanner.nextLine();
 
-    System.out.print("Enter description: ");
-    String description = scanner.nextLine();
+        System.out.print("Enter vendor: ");
+        String vendor = scanner.nextLine();
 
-    System.out.print("Enter vendor: ");
-    String vendor = scanner.nextLine();
+        System.out.print("Enter amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
 
-    System.out.print("Enter amount: ");
-    double amount = scanner.nextDouble();
-    scanner.nextLine();
+        Transaction deposit = new Transaction(date, time, description, vendor, amount);
+        saveTransaction(deposit);
+    }
 
-    Transaction payment = new Transaction(description, vendor, amount);
+
+    public static void makePayment() {
+        Scanner scanner = new Scanner(System.in);
+        LocalDate date;
+        LocalTime time;
+
+        System.out.print("Use current date and time? (Y/N): ");
+        String choice = scanner.nextLine().trim().toLowerCase();
+
+        if (choice.equals("n")) {
+            while (true) {
+                try {
+                    System.out.print("Enter date (MM-dd-yyyy): ");
+                    String dateInput = scanner.nextLine().trim();
+                    date = LocalDate.parse(dateInput, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Invalid date format! Please use MM-dd-yyyy (e.g., 10-14-2025).");
+                }
+            }
+
+            while (true) {
+                try {
+                    System.out.print("Enter time (HH:mm:ss): ");
+                    String timeInput = scanner.nextLine().trim();
+                    time = LocalTime.parse(timeInput, DateTimeFormatter.ofPattern("HH:mm:ss"));
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Invalid time format! Please use HH:mm:ss (e.g., 14:30:00).");
+                }
+            }
+
+        } else {
+            date = LocalDate.now();
+            time = LocalTime.now();
+        }
+
+        System.out.print("Enter description: ");
+        String description = scanner.nextLine();
+
+        System.out.print("Enter vendor: ");
+        String vendor = scanner.nextLine();
+
+        System.out.print("Enter amount: ");
+        double amount = scanner.nextDouble();
+        scanner.nextLine();
+
+        Transaction payment = new Transaction(date, time, description, vendor, -amount);
         saveTransaction(payment);
-}
+    }
 
-public static void ledgerScreen() {
+    public static void ledgerScreen() {
     Scanner scanner = new Scanner(System.in);
     boolean keepRunning = true;
 
@@ -101,8 +170,8 @@ public static void ledgerScreen() {
         System.out.println(" 1- All - Show all entries");
         System.out.println(" 2- Deposits - Show only deposits");
         System.out.println(" 3- Payments - Show only payments");
-        System.out.println(" 4- Reports - Run reports");
-        System.out.println(" 5- Home - Go back to home");
+        System.out.println(" 4- Reports - Run reports ");
+        System.out.println(" 5- Home - Go back to home ");
         System.out.print("Enter your choice: ");
         int choice = scanner.nextInt();
         scanner.nextLine();
@@ -408,21 +477,16 @@ public static ArrayList<Transaction> loadTransactions() {
             BufferedReader bufreader = new BufferedReader(
                     new FileReader("src/main/resources/transactions.csv"));
             bufreader.readLine();
-            System.out.println("date|time|description|vendor|amount \n");
 
             String input;
             while ((input = bufreader.readLine()) != null) {
-                // parts[0] = date
-                // parts[1] = time
-                // parts[2] = description
-                // parts[3] = vendor
-                // parts[4] = amount
                 String[] parts = input.split("\\|");
+                LocalDate date = LocalDate.parse(parts[0], DateTimeFormatter.ofPattern("MM-dd-yyyy"));
+                LocalTime time = LocalTime.parse(parts[1], DateTimeFormatter.ofPattern("HH:mm:ss"));
                 String description = parts[2];
                 String vendor = parts[3];
                 double amount = Double.parseDouble(parts[4]);
-
-                Transaction t = new Transaction(description, vendor, amount);
+                Transaction t = new Transaction(date, time, description, vendor, amount);
                 transactions.add(t);
             }
 
@@ -439,6 +503,7 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedWriter bufwriter = new BufferedWriter(
                     new FileWriter("src/main/resources/transactions.csv", true));
+            bufwriter.write("date|time|description|vendor|amount \n");
             bufwriter.write(record.toString());
             bufwriter.close();
 
