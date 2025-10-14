@@ -196,6 +196,7 @@ public static void ledgerScreen() {
             System.out.println(" 3- Year To Date");
             System.out.println(" 4- Previous Year");
             System.out.println(" 5- Search by Vendor");
+            System.out.println(" 6- Custom Search");
             System.out.println(" 0- Home - Go back to ledger screen");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
