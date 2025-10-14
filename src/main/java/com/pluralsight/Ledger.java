@@ -89,7 +89,7 @@ public class Ledger {
     double amount = scanner.nextDouble();
     scanner.nextLine();
 
-    Transaction payment = new Transaction(description, vendor, -amount);
+    Transaction payment = new Transaction(description, vendor, amount);
         saveTransaction(payment);
 }
 
@@ -154,7 +154,7 @@ public static void ledgerScreen() {
         for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
 
-            // Only show if amount is POSITIVE
+            // Only show if amount is POSITIVE(money added)
             if (t.getAmount() > 0) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
@@ -172,7 +172,7 @@ public static void ledgerScreen() {
         for (int i = transactions.size() - 1; i >= 0; i--) {
             Transaction t = transactions.get(i);
 
-            // Only show if amount is NEGATIVE
+            // Only show if amount is NEGATIVE(money payed)
             if (t.getAmount() < 0) {
                 System.out.printf("%s | %s | %s | %s | $%.2f\n",
                         t.getDate(),
@@ -407,9 +407,8 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedReader bufreader = new BufferedReader(
                     new FileReader("src/main/resources/transactions.csv"));
-            System.out.println("date|time|description|vendor|amount \n");
             bufreader.readLine();
-
+            System.out.println("date|time|description|vendor|amount \n");
 
             String input;
             while ((input = bufreader.readLine()) != null) {
@@ -440,7 +439,6 @@ public static ArrayList<Transaction> loadTransactions() {
         try {
             BufferedWriter bufwriter = new BufferedWriter(
                     new FileWriter("src/main/resources/transactions.csv", true));
-
             bufwriter.write(record.toString());
             bufwriter.close();
 
