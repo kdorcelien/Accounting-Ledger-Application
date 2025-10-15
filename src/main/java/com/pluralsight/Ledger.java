@@ -347,10 +347,9 @@ public class Ledger {
     public static void previousMonth() {
         ArrayList<Transaction> allTransactions = loadTransactions();
 
-        LocalDate input = LocalDate.now();
-        int currentMonth = input.getMonthValue();
+        int currentMonth = LocalDate.now().getMonthValue();
         int previousMonth = currentMonth -1;
-        int currentYear = input.getYear();
+        int currentYear = LocalDate.now().getYear();
         int previousYear = currentYear;
 
         if(previousMonth == 0){
