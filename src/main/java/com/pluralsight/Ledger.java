@@ -9,9 +9,11 @@ import java.util.Scanner;
 
 public class Ledger {
     public static void main(String[] args) {
-        System.out.println("== Welcome to your Ledger Application ==");
+        System.out.println("╔════════════════════════════════╗");
+        System.out.println("║          Welcome               ║");
+        System.out.println("║  To your: Ledger Application   ║");
+        System.out.println("╚════════════════════════════════╝");
         run();
-
     }
 
     public static void run() {
