@@ -180,7 +180,8 @@ public class Ledger {
         double amount = scanner.nextDouble();
         scanner.nextLine();
 
-        Transaction payment = new Transaction(date, time, description, vendor, amount);
+//payment amount needs to be negative(assuming the user wont enter it manually)
+        Transaction payment = new Transaction(date, time, description, vendor, -amount);
         saveTransaction(payment);
     }
 
@@ -426,14 +427,14 @@ public class Ledger {
     public static void customSearch() {
         ArrayList<Transaction> allTransactions = loadTransactions();
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Start Date (MM-dd-yyyy) or press ENTER to skip: ");
+        System.out.print("Enter Start Date (yyyy-MM-dd) or press ENTER to skip: ");
         String startDate = scanner.nextLine();
         LocalDate parseStartDate = null;
         if (!startDate.isEmpty()) {
             parseStartDate = LocalDate.parse(startDate);
         }
 
-        System.out.print("Enter End Date (MM-dd-yyyy) or press ENTER to skip: ");
+        System.out.print("Enter End Date (yyyy-MM-dd) or press ENTER to skip: ");
         String endDate = scanner.nextLine();
         LocalDate parseEndDate = null;
         if (!endDate.isEmpty()) {
