@@ -427,18 +427,18 @@ public class Ledger {
     public static void customSearch() {
         ArrayList<Transaction> allTransactions = loadTransactions();
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Start Date (yyyy-MM-dd) or press ENTER to skip: ");
+        System.out.print("Enter Start Date (MM-dd-yyyy) or press ENTER to skip: ");
         String startDate = scanner.nextLine();
         LocalDate parseStartDate = null;
         if (!startDate.isEmpty()) {
-            parseStartDate = LocalDate.parse(startDate);
+            parseStartDate = LocalDate.parse(startDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         }
 
-        System.out.print("Enter End Date (yyyy-MM-dd) or press ENTER to skip: ");
+        System.out.print("Enter End Date (MM-dd-yyyy) or press ENTER to skip: ");
         String endDate = scanner.nextLine();
         LocalDate parseEndDate = null;
         if (!endDate.isEmpty()) {
-            parseEndDate = LocalDate.parse(endDate);
+            parseEndDate = LocalDate.parse(endDate, DateTimeFormatter.ofPattern("MM-dd-yyyy"));
         }
 
         System.out.print("Enter Description or press ENTER to skip: ");
